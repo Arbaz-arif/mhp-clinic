@@ -22,7 +22,7 @@ export default async function LoginPage({
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-sm">
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle className="text-xl">MHP Clinic</CardTitle>
           <CardDescription>Sign in as the doctor to continue.</CardDescription>
         </CardHeader>
