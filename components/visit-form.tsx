@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Field, FormMessage, SubmitButton, useServerForm } from "@/components/form-bits";
 import { MedicineCombobox } from "@/components/medicine-combobox";
-import { formatDate, toDateInput } from "@/lib/utils";
+import { cn, formatDate, toDateInput } from "@/lib/utils";
 import type { FormState } from "@/lib/validation";
 import type { MedicineOption, PreviousPrescription, PrescriptionItemDTO, VisitDTO } from "@/lib/queries";
 
@@ -19,10 +19,33 @@ const POTENCIES = ["Q", "3X", "6X", "12X", "30X", "6C", "12C", "30C", "200C", "1
 const DOSES = ["4 pills", "2 pills", "2 tablets", "4 tablets", "2 drops", "5 drops", "10 drops in water", "1 teaspoon"];
 const FREQUENCIES = ["Once daily (OD)", "Twice daily (BD)", "Thrice daily (TDS)", "Four times daily (QID)", "Every 2 hours", "Every 4 hours", "Weekly", "Single dose", "When needed (SOS)"];
 const DURATIONS = ["1 day", "3 days", "5 days", "7 days", "10 days", "15 days", "1 month", "2 months"];
+// Per-medicine "how to take" suggestions. Each medicine can be taken differently, so this is per row.
+const INSTRUCTIONS = [
+  "Dissolve under the tongue",
+  "Chew slowly, do not swallow whole",
+  "Drops in half cup of water",
+  "30 min before food",
+  "30 min after food",
+  "Empty stomach in the morning",
+  "At bedtime",
+  "Do not touch pills with hands",
+  "Shake the bottle before use",
+  "Stop when symptoms improve",
+];
 
 const blank = (): PrescriptionItemDTO => ({ medicineName: "", potency: "", dose: "", frequency: "", duration: "", instructions: "" });
 const isBlank = (r: PrescriptionItemDTO) =>
   ![r.medicineName, r.potency, r.dose, r.frequency, r.duration, r.instructions].some((v) => v && v.trim());
+
+/** Small caption above a per-medicine input, so each field is named without taking much space. */
+function Sub({ label, className, children }: { label: string; className?: string; children: React.ReactNode }) {
+  return (
+    <div className={cn("grid gap-1", className)}>
+      <span className="text-muted-foreground text-[11px] leading-none">{label}</span>
+      {children}
+    </div>
+  );
+}
 
 export function VisitForm({
   action,
@@ -114,43 +137,56 @@ export function VisitForm({
               </Button>
             </div>
             <div className="grid gap-2 sm:grid-cols-[2fr_1fr]">
-              <MedicineCombobox
-                options={medicines}
-                value={{ medicineId: row.medicineId, medicineName: row.medicineName }}
-                onChange={(v) => update(row.key, v)}
-                invalid={!!e.prescription && !row.medicineName}
-              />
-              <Input
-                placeholder="Potency (30C, 200C, 1M, Q…)"
-                aria-label="Potency"
-                list="potencies"
-                value={row.potency}
-                onChange={(ev) => update(row.key, { potency: ev.target.value })}
-              />
+              <Sub label="Medicine">
+                <MedicineCombobox
+                  options={medicines}
+                  value={{ medicineId: row.medicineId, medicineName: row.medicineName }}
+                  onChange={(v) => update(row.key, v)}
+                  invalid={!!e.prescription && !row.medicineName}
+                />
+              </Sub>
+              <Sub label="Potency">
+                <Input
+                  placeholder="30C, 200C, 1M, Q…"
+                  aria-label="Potency"
+                  list="potencies"
+                  value={row.potency}
+                  onChange={(ev) => update(row.key, { potency: ev.target.value })}
+                />
+              </Sub>
             </div>
             <div className="grid gap-2 sm:grid-cols-3">
-              <Input placeholder="Dose" aria-label="Dose" list="doses" value={row.dose} onChange={(ev) => update(row.key, { dose: ev.target.value })} />
-              <Input
-                placeholder="Frequency"
-                aria-label="Frequency"
-                list="frequencies"
-                value={row.frequency}
-                onChange={(ev) => update(row.key, { frequency: ev.target.value })}
-              />
-              <Input
-                placeholder="Duration"
-                aria-label="Duration"
-                list="durations"
-                value={row.duration}
-                onChange={(ev) => update(row.key, { duration: ev.target.value })}
-              />
+              <Sub label="Dose">
+                <Input placeholder="4 pills, 5 drops…" aria-label="Dose" list="doses" value={row.dose} onChange={(ev) => update(row.key, { dose: ev.target.value })} />
+              </Sub>
+              <Sub label="Frequency">
+                <Input
+                  placeholder="Twice daily…"
+                  aria-label="Frequency"
+                  list="frequencies"
+                  value={row.frequency}
+                  onChange={(ev) => update(row.key, { frequency: ev.target.value })}
+                />
+              </Sub>
+              <Sub label="Duration">
+                <Input
+                  placeholder="7 days…"
+                  aria-label="Duration"
+                  list="durations"
+                  value={row.duration}
+                  onChange={(ev) => update(row.key, { duration: ev.target.value })}
+                />
+              </Sub>
             </div>
-            <Input
-              placeholder="Instructions (e.g. dissolve under tongue, 30 min before food)"
-              aria-label="Instructions"
-              value={row.instructions ?? ""}
-              onChange={(ev) => update(row.key, { instructions: ev.target.value })}
-            />
+            <Sub label="How to take this medicine">
+              <Input
+                placeholder="e.g. dissolve under the tongue, 30 min before food"
+                aria-label="How to take this medicine"
+                list="instructions"
+                value={row.instructions ?? ""}
+                onChange={(ev) => update(row.key, { instructions: ev.target.value })}
+              />
+            </Sub>
           </div>
         ))}
 
@@ -169,6 +205,7 @@ export function VisitForm({
         <datalist id="doses">{DOSES.map((n) => <option key={n} value={n} />)}</datalist>
         <datalist id="frequencies">{FREQUENCIES.map((n) => <option key={n} value={n} />)}</datalist>
         <datalist id="durations">{DURATIONS.map((n) => <option key={n} value={n} />)}</datalist>
+        <datalist id="instructions">{INSTRUCTIONS.map((n) => <option key={n} value={n} />)}</datalist>
       </fieldset>
 
       <div>

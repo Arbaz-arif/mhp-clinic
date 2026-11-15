@@ -120,7 +120,11 @@ export default async function PrintPrescriptionPage({
                     <p className="text-[9.5pt]">
                       {item.dose} · {item.frequency} · for {item.duration}
                     </p>
-                    {item.instructions && <p className="text-[9pt] text-neutral-600 italic">{item.instructions}</p>}
+                    {item.instructions && (
+                      <p className="text-[9pt] text-neutral-700">
+                        <span className="font-semibold">How to take:</span> <span className="italic">{item.instructions}</span>
+                      </p>
+                    )}
                   </div>
                 </li>
               ))}

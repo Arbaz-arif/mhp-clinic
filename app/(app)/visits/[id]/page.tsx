@@ -78,7 +78,7 @@ export default async function VisitPage({ params }: { params: Promise<{ id: stri
                     <TableHead>Dose</TableHead>
                     <TableHead>Frequency</TableHead>
                     <TableHead>Duration</TableHead>
-                    <TableHead>Instructions</TableHead>
+                    <TableHead>How to take</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
