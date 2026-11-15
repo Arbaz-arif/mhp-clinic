@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { BackLink } from "@/components/back-link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PatientForm } from "@/components/patient-form";
 import { updatePatient } from "@/app/actions/patients";
@@ -10,7 +11,11 @@ export default async function EditPatientPage({ params }: { params: Promise<{ id
   if (!patient) notFound();
 
   return (
-    <Card className="mx-auto max-w-2xl">
+    <div className="mx-auto grid max-w-2xl gap-4">
+      <BackLink href={`/patients/${patient.id}`}>
+        {patient.name} · #{patient.patientNo}
+      </BackLink>
+    <Card>
       <CardHeader>
         <CardTitle>Edit patient #{patient.patientNo}</CardTitle>
       </CardHeader>
@@ -18,5 +23,6 @@ export default async function EditPatientPage({ params }: { params: Promise<{ id
         <PatientForm action={updatePatient.bind(null, id)} patient={patient} submitLabel="Save changes" />
       </CardContent>
     </Card>
+    </div>
   );
 }

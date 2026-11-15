@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { BackLink } from "@/components/back-link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { VisitForm } from "@/components/visit-form";
 import { createVisit } from "@/app/actions/visits";
@@ -11,7 +12,11 @@ export default async function NewVisitPage({ params }: { params: Promise<{ id: s
   if (!patient) notFound();
 
   return (
-    <Card className="mx-auto max-w-4xl">
+    <div className="mx-auto grid max-w-4xl gap-4">
+      <BackLink href={`/patients/${id}`}>
+        {patient.name} · #{patient.patientNo}
+      </BackLink>
+    <Card>
       <CardHeader>
         <CardTitle>New visit</CardTitle>
         <CardDescription>
@@ -25,5 +30,6 @@ export default async function NewVisitPage({ params }: { params: Promise<{ id: s
           submitLabel="Save visit" />
       </CardContent>
     </Card>
+    </div>
   );
 }

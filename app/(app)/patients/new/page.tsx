@@ -1,3 +1,4 @@
+import { BackLink } from "@/components/back-link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PatientForm } from "@/components/patient-form";
 import { createPatient } from "@/app/actions/patients";
@@ -13,7 +14,9 @@ export default async function NewPatientPage({
   const defaults = { cnic: param(sp.cnic).slice(0, 20), phone: param(sp.phone).slice(0, 20) };
 
   return (
-    <Card className="mx-auto max-w-2xl">
+    <div className="mx-auto grid max-w-2xl gap-4">
+      <BackLink href="/patients">Patients</BackLink>
+    <Card>
       <CardHeader>
         <CardTitle>Register new patient</CardTitle>
       </CardHeader>
@@ -21,5 +24,6 @@ export default async function NewPatientPage({
         <PatientForm action={createPatient} defaults={defaults} submitLabel="Save patient" />
       </CardContent>
     </Card>
+    </div>
   );
 }

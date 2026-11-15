@@ -1,10 +1,13 @@
+import { BackLink } from "@/components/back-link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MedicineForm } from "@/components/medicine-form";
 import { createMedicine } from "@/app/actions/medicines";
 
 export default function NewMedicinePage() {
   return (
-    <Card className="mx-auto max-w-2xl">
+    <div className="mx-auto grid max-w-2xl gap-4">
+      <BackLink href="/medicines">Medicines</BackLink>
+    <Card>
       <CardHeader>
         <CardTitle>Add medicine</CardTitle>
       </CardHeader>
@@ -12,5 +15,6 @@ export default function NewMedicinePage() {
         <MedicineForm action={createMedicine} submitLabel="Save medicine" />
       </CardContent>
     </Card>
+    </div>
   );
 }
