@@ -16,22 +16,6 @@ type Row = PrescriptionItemDTO & { key: number }; // key = stable React key for 
 
 // Suggestions only: any potency can be typed (free text).
 const POTENCIES = ["Q", "3X", "6X", "12X", "30X", "6C", "12C", "30C", "200C", "1M", "10M", "50M", "CM", "LM1", "LM2", "LM3", "LM6"];
-const DOSES = ["4 pills", "2 pills", "2 tablets", "4 tablets", "2 drops", "5 drops", "10 drops in water", "1 teaspoon"];
-const FREQUENCIES = ["Once daily (OD)", "Twice daily (BD)", "Thrice daily (TDS)", "Four times daily (QID)", "Every 2 hours", "Every 4 hours", "Weekly", "Single dose", "When needed (SOS)"];
-const DURATIONS = ["1 day", "3 days", "5 days", "7 days", "10 days", "15 days", "1 month", "2 months"];
-// Per-medicine "how to take" suggestions. Each medicine can be taken differently, so this is per row.
-const INSTRUCTIONS = [
-  "Dissolve under the tongue",
-  "Chew slowly, do not swallow whole",
-  "Drops in half cup of water",
-  "30 min before food",
-  "30 min after food",
-  "Empty stomach in the morning",
-  "At bedtime",
-  "Do not touch pills with hands",
-  "Shake the bottle before use",
-  "Stop when symptoms improve",
-];
 
 const blank = (): PrescriptionItemDTO => ({ medicineName: "", potency: "", dose: "", frequency: "", duration: "", instructions: "" });
 const isBlank = (r: PrescriptionItemDTO) =>
@@ -157,13 +141,12 @@ export function VisitForm({
             </div>
             <div className="grid gap-2 sm:grid-cols-3">
               <Sub label="Dose">
-                <Input placeholder="4 pills, 5 drops…" aria-label="Dose" list="doses" value={row.dose} onChange={(ev) => update(row.key, { dose: ev.target.value })} />
+                <Input placeholder="4 pills, 5 drops…" aria-label="Dose" value={row.dose} onChange={(ev) => update(row.key, { dose: ev.target.value })} />
               </Sub>
               <Sub label="Frequency">
                 <Input
                   placeholder="Twice daily…"
                   aria-label="Frequency"
-                  list="frequencies"
                   value={row.frequency}
                   onChange={(ev) => update(row.key, { frequency: ev.target.value })}
                 />
@@ -172,7 +155,6 @@ export function VisitForm({
                 <Input
                   placeholder="7 days…"
                   aria-label="Duration"
-                  list="durations"
                   value={row.duration}
                   onChange={(ev) => update(row.key, { duration: ev.target.value })}
                 />
@@ -182,7 +164,6 @@ export function VisitForm({
               <Input
                 placeholder="e.g. dissolve under the tongue, 30 min before food"
                 aria-label="How to take this medicine"
-                list="instructions"
                 value={row.instructions ?? ""}
                 onChange={(ev) => update(row.key, { instructions: ev.target.value })}
               />
@@ -202,10 +183,6 @@ export function VisitForm({
         </Field>
 
         <datalist id="potencies">{POTENCIES.map((n) => <option key={n} value={n} />)}</datalist>
-        <datalist id="doses">{DOSES.map((n) => <option key={n} value={n} />)}</datalist>
-        <datalist id="frequencies">{FREQUENCIES.map((n) => <option key={n} value={n} />)}</datalist>
-        <datalist id="durations">{DURATIONS.map((n) => <option key={n} value={n} />)}</datalist>
-        <datalist id="instructions">{INSTRUCTIONS.map((n) => <option key={n} value={n} />)}</datalist>
       </fieldset>
 
       <div>
