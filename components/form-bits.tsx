@@ -51,7 +51,9 @@ export function useServerForm(action: ServerAction) {
   const [state, formAction, pending] = useActionState(action, {});
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    // Include the clicked submit button's name/value, so a form can offer more than one "save" action.
+    const submitter = (e.nativeEvent as SubmitEvent).submitter;
+    const formData = new FormData(e.currentTarget, submitter instanceof HTMLButtonElement ? submitter : undefined);
     startTransition(() => formAction(formData));
   };
   return { state, errors: state.errors ?? {}, onSubmit, pending };

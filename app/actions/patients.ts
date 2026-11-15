@@ -55,7 +55,8 @@ export async function createPatient(_prev: FormState, formData: FormData): Promi
     throw err;
   }
   revalidatePath("/patients");
-  redirect(`/patients/${id}`);
+  // "Save & add first visit" button → straight to the new-visit form for this patient.
+  redirect(formData.get("next") === "visit" ? `/patients/${id}/visits/new` : `/patients/${id}`);
 }
 
 export async function updatePatient(id: string, _prev: FormState, formData: FormData): Promise<FormState> {

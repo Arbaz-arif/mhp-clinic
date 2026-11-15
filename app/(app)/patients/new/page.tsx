@@ -21,7 +21,7 @@ export default async function NewPatientPage({
         <CardTitle>Register new patient</CardTitle>
       </CardHeader>
       <CardContent>
-        <PatientForm action={createPatient} defaults={defaults} submitLabel="Save patient" />
+        <PatientForm action={createPatient} defaults={defaults} submitLabel="Save patient" offerFirstVisit />
       </CardContent>
     </Card>
     </div>

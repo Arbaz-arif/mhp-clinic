@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Field, FormMessage, SubmitButton, useServerForm } from "@/components/form-bits";
+import { Button } from "@/components/ui/button";
 import type { FormState } from "@/lib/validation";
 import type { PatientDTO } from "@/lib/queries";
 
@@ -21,11 +22,14 @@ export function PatientForm({
   patient,
   defaults,
   submitLabel,
+  offerFirstVisit,
 }: {
   action: Action;
   patient?: PatientDTO;
   defaults?: { cnic?: string; phone?: string };
   submitLabel: string;
+  /** Registration only: adds a second button that saves and opens the new-visit form for this patient. */
+  offerFirstVisit?: boolean;
 }) {
   const { state, errors: e, onSubmit, pending } = useServerForm(action);
 
@@ -80,8 +84,13 @@ export function PatientForm({
         <Input id="address" name="address" defaultValue={patient?.address} />
       </Field>
 
-      <div>
+      <div className="flex flex-wrap gap-2">
         <SubmitButton pending={pending}>{submitLabel}</SubmitButton>
+        {offerFirstVisit && (
+          <Button type="submit" name="next" value="visit" variant="outline" disabled={pending}>
+            Save &amp; add first visit
+          </Button>
+        )}
       </div>
     </form>
   );
